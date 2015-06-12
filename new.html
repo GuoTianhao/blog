@@ -21,29 +21,51 @@
 </head>
 <body>
 
-<div class="container" style="padding-top: 50px">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid col-md-8 col-md-offset-2">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">GoBlog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a><input type="checkbox">目录</a></li>
+                <li style="padding-top: 7px;padding-right: 7px"><button class="btn btn-default" id="switch_btn" style="outline: none;" onclick=switchEditor()>Switch</button></li>
+                <!--<li><a></a></li>-->
+                <li style="padding-top: 7px"><button class="btn btn-default" id="publish_btn" style="outline: none;">Publish</button></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="container" style="padding-top: 70px">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="col-md-12">
                 <input type="text" class="h1" id="title" placeholder="Title"
                        style="border: none;outline: none;width: 100%">
             </div>
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <input type="text" id="tags" data-role="tagsinput" placeholder="Tags" style="border:none;outline: none">
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-default" id="publish_btn" style="outline: none;">Publish</button>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-default" id="switch_btn" style="outline: none;" onclick="switchEditor()">Switch
-                </button>
             </div>
             <div class="col-md-12">
                 <div class="editable" id="text" style="border:none;outline: none">
                 </div>
             </div>
             <div class="col-md-12">
-                <textarea id="hidden_editor" class="form-control" style="resize: none;display: none;border:none;outline: none;box-shadow: none;padding: 6px"></textarea>
+                <textarea id="hidden_editor" class="form-control" placeholder="Type text in Markdown here"
+                          style="resize: none;display: none;border:none;outline: none;box-shadow: none;padding: 6px"></textarea>
             </div>
         </div>
 
@@ -52,8 +74,8 @@
 
 <script>
     var editor = new MediumEditor('.editable');
-    $('.editable').css("padding","6px");
-//    autosize($('#hidden_editor'));
+    $('.editable').css("padding", "6px");
+    //    autosize($('#hidden_editor'));
 
     $("#publish_btn").click(function () {
         console.log(toMarkdown($("#text").html()));
@@ -65,16 +87,16 @@
         var editor = $('.editable');
         if (!isMarkdown) {
             var markdown_content = toMarkdown(editor.html());
-            editor.css("display","none");
-            hidden.css("display","block");
+            editor.css("display", "none");
+            hidden.css("display", "block");
             hidden.val(markdown_content);
             autosize(hidden);
             isMarkdown = true;
         } else {
             var rich_content = markdown.toHTML(hidden.val());
             editor.html(rich_content);
-            editor.css("display","block");
-            hidden.css("display","none");
+            editor.css("display", "block");
+            hidden.css("display", "none");
             isMarkdown = false;
         }
     }
