@@ -9,9 +9,15 @@
     <link rel="stylesheet" href="css/medium-editor.css">
     <link rel="stylesheet" href="css/themes/default.css">
     <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-tagsinput.css">
+
     <script src="js/jquery.js"></script>
     <script src="js/medium-editor.js"></script>
     <script src="js/to-markdown.js"></script>
+    <script src="js/bootstrap-tagsinput.js"></script>
+    <script src="js/markdown.js"></script>
+    <script src="js/autosize.js"></script>
+
 </head>
 <body>
 
@@ -19,17 +25,25 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="col-md-12">
-                <input type="text" class="h1" id="title" placeholder="Title" style="border: none;outline: none;width: 100%">
+                <input type="text" class="h1" id="title" placeholder="Title"
+                       style="border: none;outline: none;width: 100%">
             </div>
-            <div class="col-md-10">
-                <input type="text" class="h4" id="tags" placeholder="Tags" style="border: none;outline: none;width: 100%">
+            <div class="col-md-8">
+                <input type="text" id="tags" data-role="tagsinput" placeholder="Tags" style="border:none;outline: none">
             </div>
             <div class="col-md-2">
                 <button class="btn btn-default" id="publish_btn" style="outline: none;">Publish</button>
             </div>
+            <div class="col-md-2">
+                <button class="btn btn-default" id="switch_btn" style="outline: none;" onclick="switchEditor()">Switch
+                </button>
+            </div>
             <div class="col-md-12">
                 <div class="editable" id="text" style="border:none;outline: none">
                 </div>
+            </div>
+            <div class="col-md-12">
+                <textarea id="hidden_editor" class="form-control" style="resize: none;display: none;border:none;outline: none;box-shadow: none;padding: 6px"></textarea>
             </div>
         </div>
 
@@ -38,9 +52,33 @@
 
 <script>
     var editor = new MediumEditor('.editable');
-    $("#publish_btn").click(function(){
+    $('.editable').css("padding","6px");
+//    autosize($('#hidden_editor'));
+
+    $("#publish_btn").click(function () {
         console.log(toMarkdown($("#text").html()));
     });
+
+    var isMarkdown = false;
+    function switchEditor() {
+        var hidden = $('#hidden_editor');
+        var editor = $('.editable');
+        if (!isMarkdown) {
+            var markdown_content = toMarkdown(editor.html());
+            editor.css("display","none");
+            hidden.css("display","block");
+            hidden.val(markdown_content);
+            autosize(hidden);
+            isMarkdown = true;
+        } else {
+            var rich_content = markdown.toHTML(hidden.val());
+            editor.html(rich_content);
+            editor.css("display","block");
+            hidden.css("display","none");
+            isMarkdown = false;
+        }
+    }
+
 </script>
 
 </body>
