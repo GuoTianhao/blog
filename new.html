@@ -41,10 +41,17 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li><a>目录</a></li>
-                <li style="padding-top: 9px;padding-right: 10px"><input type="checkbox" data-toggle="toggle" data-size="small"></li>
-                <li style="padding-top: 7px;padding-right: 10px"><button class="btn btn-default" id="switch_btn" style="outline: none;" onclick=switchEditor()>Switch</button></li>
+                <li style="padding-top: 9px;padding-right: 10px"><input type="checkbox" id="category"
+                                                                        data-toggle="toggle" data-size="small"></li>
+                <li style="padding-top: 7px;padding-right: 10px">
+                    <button class="btn btn-default" id="switch_btn" style="outline: none;" onclick=switchEditor()>
+                        Switch
+                    </button>
+                </li>
                 <!--<li><a></a></li>-->
-                <li style="padding-top: 7px"><button class="btn btn-default" id="publish_btn" style="outline: none;">Publish</button></li>
+                <li style="padding-top: 7px">
+                    <button class="btn btn-default" id="publish_btn" style="outline: none;">Publish</button>
+                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -80,10 +87,6 @@
     $('.editable').css("padding", "6px");
     //    autosize($('#hidden_editor'));
 
-    $("#publish_btn").click(function () {
-        console.log(toMarkdown($("#text").html()));
-    });
-
     var isMarkdown = false;
     function switchEditor() {
         var hidden = $('#hidden_editor');
@@ -103,6 +106,34 @@
             isMarkdown = false;
         }
     }
+
+
+    $("#publish_btn").click(function () {
+        var title = $('#title').val();
+        var tags = $('#tags').tagsinput('items');
+        var category = $('#category').prop('checked');
+        var content;
+        if (isMarkdown) {
+            content = hidden.val();
+        } else {
+            content = toMarkdown($('.editable').html());
+        }
+        $.post("/dashboard/blog/new", {
+            "title": title,
+            "tags": tags,
+            "category": category,
+            "content": content,
+        }, function (data, status) {
+            console.log(data)
+        })
+//        console.log(tags);
+//        console.log(toMarkdown($("#text").html()));
+    });
+    /*todo
+     tags=["java","php"]
+     $.post("/dashboard/blog/new",{"title":"233","tags":tags,"content":"bilibili"},function(data,status){
+     console.log(data)
+     });*/
 
 </script>
 
