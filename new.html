@@ -23,8 +23,8 @@
 </head>
 <body>
 
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid col-md-8 col-md-offset-2">
+<nav class="navbar navbar-default navbar-fixed-top container">
+    <div class="container col-md-8 col-md-offset-2">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -107,6 +107,44 @@
         }
     }
 
+    function recover() {
+        console.log("recover");
+        $('#title').val(localStorage.title);
+        $('#tags').val(localStorage.tags);
+        if (localStorage.category == "true") {
+            $('#category').bootstrapToggle("on");
+        } else {
+            $('#category').bootstrapToggle("off");
+        }
+        var draft = localStorage.content;
+        if (localStorage.isMarkdown == "false") {
+            $('.editable').html(markdown.toHTML(draft));
+        } else {
+            $('.editable').css("display", "none");
+            $('#hidden_editor').css("display", "block");
+            $('#hidden_editor').val(draft);
+            autosize($('#hidden_editor'));
+            isMarkdown = true;
+        }
+    }
+
+    if (localStorage.getItem("category")) {
+        recover();
+    }
+
+    function autoSave() {
+        localStorage.title = $('#title').val();
+        localStorage.tags = $('#tags').val();
+        localStorage.category = $('#category').prop('checked');
+        var content;
+        if (isMarkdown) {
+            content = $('#hidden_editor').val();
+        } else {
+            content = toMarkdown($('.editable').html());
+        }
+        localStorage.content = content;
+        localStorage.isMarkdown = isMarkdown;
+    }
 
     $("#publish_btn").click(function () {
         var title = $('#title').val();
@@ -114,7 +152,7 @@
         var category = $('#category').prop('checked');
         var content;
         if (isMarkdown) {
-            content = hidden.val();
+            content = $('#hidden_editor').val();
         } else {
             content = toMarkdown($('.editable').html());
         }
@@ -125,15 +163,12 @@
             "content": content,
         }, function (data, status) {
             console.log(data)
-        })
-//        console.log(tags);
-//        console.log(toMarkdown($("#text").html()));
+        });
+        clearInterval(t);
+        localStorage.clear();
     });
-    /*todo
-     tags=["java","php"]
-     $.post("/dashboard/blog/new",{"title":"233","tags":tags,"content":"bilibili"},function(data,status){
-     console.log(data)
-     });*/
+
+    var t = setInterval(autoSave, 1000);
 
 </script>
 
