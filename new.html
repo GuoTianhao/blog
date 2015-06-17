@@ -34,7 +34,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">GoBlog</a>
+            <a class="navbar-brand" href="#" style="outline: none">GoBlog</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -59,7 +59,7 @@
     <!-- /.container-fluid -->
 </nav>
 
-<div class="container" style="padding-top: 70px">
+<div class="container" style="padding-top: 70px" id="cont">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="col-md-12">
@@ -78,6 +78,7 @@
                           style="resize: none;display: none;border:none;outline: none;box-shadow: none;padding: 6px"></textarea>
             </div>
         </div>
+        <input hidden="hidden" id="focus">
 
     </div>
 </div>
@@ -103,6 +104,9 @@
             editor.html(rich_content);
             editor.css("display", "block");
             hidden.css("display", "none");
+            $('.editable').focus();
+            $('#title').focus();
+            $('#title').blur();
             isMarkdown = false;
         }
     }
@@ -119,6 +123,9 @@
         var draft = localStorage.content;
         if (localStorage.isMarkdown == "false") {
             $('.editable').html(markdown.toHTML(draft));
+            $('.editable').focus();
+            $('#title').focus();
+            $('#title').blur();
         } else {
             $('.editable').css("display", "none");
             $('#hidden_editor').css("display", "block");
